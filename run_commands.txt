@@ -23,6 +23,9 @@ python LUT_create.py \
   --seed 7 \
   --out-prefix out/epp_highres
 
+for win:
+py LUT_create.py --build-lookup --grid-maxp 0.30 --grid-step 0.03 --rounds 1 2 3 --methods all --lambda-penalty 0.15 --seed 7 --out-prefix out/epp_highres
+
 
 # ---------------------------------------------------------------------------
 # 2️⃣  Neural network training
@@ -73,7 +76,7 @@ python compare_offgrid.py \
 # Runtime: few minutes with fast nearest-grid patch
 # ---------------------------------------------------------------------------
 
-python compare_offgrid.py \
+python compare_offgrid.py 
   --sim-file LUT_create \
   --lookup out/epp_lookup_highres.json \
   --model  out/epp_nn_model_highres.npz \
@@ -82,6 +85,9 @@ python compare_offgrid.py \
   --n-test 50000 \
   --sampler continuous \
   --outdir out/offgrid_nn_cont
+
+for win:
+  py compare_offgrid.py --sim-file LUT_create --lookup out/epp_lookup_highres.json --model  out/epp_nn_model_highres.npz --use-nn --tau-log 0.12 --n-test 50000 --sampler continuous --outdir out/offgrid_nn_cont
 
 
 # ---------------------------------------------------------------------------

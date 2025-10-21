@@ -1,0 +1,121 @@
+###############################################################################
+# Adaptive Entanglement Purification — Full Workflow
+# Author: You
+# Purpose: Build LUT, train NN, and compare adaptive vs static purification.
+###############################################################################
+
+# ---------------------------------------------------------------------------
+# 1️⃣  High-precision lookup table (LUT) creation
+# ---------------------------------------------------------------------------
+# Builds a multi-resolution grid of optimal protocols for (pX,pY,pZ)
+# The script refines until the lookup table is stable.
+# Output: out/epp_lookup_highres.json
+# Runtime: several minutes on high resolution
+# ---------------------------------------------------------------------------
+
+python LUT_create.py \
+  --build-lookup \
+  --grid-maxp 0.30 \
+  --grid-step 0.03 \
+  --rounds 1 2 3 \
+  --methods all \
+  --lambda-penalty 0.15 \
+  --seed 7 \
+  --out-prefix out/epp_highres
+
+
+# ---------------------------------------------------------------------------
+# 2️⃣  Neural network training
+# ---------------------------------------------------------------------------
+# Trains the MLP on the lookup table to map noise → best purification protocol.
+# Output: 
+#   out/epp_nn_model_highres.npz
+#   out/epp_nn_model_highres.npz.labels.json
+# Runtime: ~30–60 seconds (CPU)
+# ---------------------------------------------------------------------------
+
+python LUT_create.py \
+  --train-nn \
+  --lookup out/epp_lookup_highres.json \
+  --model  out/epp_nn_model_highres.npz \
+  --rounds 1 2 3 \
+  --methods all \
+  --lambda-penalty 0.15 \
+  --seed 7
+
+
+# ---------------------------------------------------------------------------
+# 3️⃣  Quick smoke test (verify correctness)
+# ---------------------------------------------------------------------------
+# Runs 100 random off-grid samples to confirm pipeline works and NN loads.
+# Output folder: out/offgrid_smoketest
+# Runtime: few seconds
+# ---------------------------------------------------------------------------
+
+python compare_offgrid.py \
+  --sim-file LUT_create \
+  --lookup out/epp_lookup_highres.json \
+  --model  out/epp_nn_model_highres.npz \
+  --use-nn \
+  --tau-log 0.12 \
+  --n-test 100 \
+  --sampler continuous \
+  --outdir out/offgrid_smoketest
+
+
+# ---------------------------------------------------------------------------
+# 4️⃣  Full-scale continuous comparison (NN adaptive vs static baseline)
+# ---------------------------------------------------------------------------
+# Evaluates 50,000 random unseen noise samples.
+# Automatically uses LUT when logarithmically close (≤ τ_log), else NN.
+# Output:
+#   JSON summary and CSV per baseline in out/offgrid_nn_cont/
+# Runtime: few minutes with fast nearest-grid patch
+# ---------------------------------------------------------------------------
+
+python compare_offgrid.py \
+  --sim-file LUT_create \
+  --lookup out/epp_lookup_highres.json \
+  --model  out/epp_nn_model_highres.npz \
+  --use-nn \
+  --tau-log 0.12 \
+  --n-test 50000 \
+  --sampler continuous \
+  --outdir out/offgrid_nn_cont
+
+
+# ---------------------------------------------------------------------------
+# 5️⃣  Optional: "Direct" adaptive benchmark (gold-standard optimization)
+# ---------------------------------------------------------------------------
+# Re-optimizes analytically for each test point (slow but exact).
+# Used to measure how close the NN comes to the theoretical optimum.
+# Output: out/offgrid_direct_cont/
+# Runtime: longer (~15–30 min for 50k samples)
+# ---------------------------------------------------------------------------
+
+python compare_offgrid.py \
+  --sim-file LUT_create \
+  --lookup out/epp_lookup_highres.json \
+  --n-test 50000 \
+  --sampler continuous \
+  --outdir out/offgrid_direct_cont
+
+
+# ---------------------------------------------------------------------------
+# 6️⃣  Visualization
+# ---------------------------------------------------------------------------
+# Generates ECDFs, histograms, and win-rate-by-noise plots from CSV outputs.
+# Output: PNGs and summary CSVs in out/viz_offgrid_*/ folders
+# ---------------------------------------------------------------------------
+
+python viz_all_comparisons.py \
+  --glob "out/offgrid_nn_cont/offgrid_cmp_vs_*.csv" \
+  --outdir out/viz_offgrid_nn_cont
+
+python viz_all_comparisons.py \
+  --glob "out/offgrid_direct_cont/offgrid_cmp_vs_*.csv" \
+  --outdir out/viz_offgrid_direct_cont
+
+###############################################################################
+# End of workflow
+###############################################################################

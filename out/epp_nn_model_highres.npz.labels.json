@@ -1,0 +1,140 @@
+{
+  "label_to_index": {
+    "alternate_r1": 0,
+    "alternate_r2": 1,
+    "alternate_r3": 2,
+    "recurrence_r1": 3,
+    "recurrence_r2": 4,
+    "recurrence_r3": 5,
+    "swapbc_r1": 6,
+    "swapbc_r2": 7,
+    "swapbc_r3": 8,
+    "dejmps_like_r1": 9,
+    "dejmps_like_r2": 10,
+    "dejmps_like_r3": 11
+  },
+  "index_to_label": [
+    {
+      "name": "alternate_r1",
+      "rounds": 1,
+      "schedule": "alternate"
+    },
+    {
+      "name": "alternate_r2",
+      "rounds": 2,
+      "schedule": "alternate"
+    },
+    {
+      "name": "alternate_r3",
+      "rounds": 3,
+      "schedule": "alternate"
+    },
+    {
+      "name": "recurrence_r1",
+      "rounds": 1,
+      "schedule": "identity"
+    },
+    {
+      "name": "recurrence_r2",
+      "rounds": 2,
+      "schedule": "identity"
+    },
+    {
+      "name": "recurrence_r3",
+      "rounds": 3,
+      "schedule": "identity"
+    },
+    {
+      "name": "swapbc_r1",
+      "rounds": 1,
+      "schedule": "swapbc"
+    },
+    {
+      "name": "swapbc_r2",
+      "rounds": 2,
+      "schedule": "swapbc"
+    },
+    {
+      "name": "swapbc_r3",
+      "rounds": 3,
+      "schedule": "swapbc"
+    },
+    {
+      "name": "dejmps_like_r1",
+      "rounds": 1,
+      "schedule": "swapbd"
+    },
+    {
+      "name": "dejmps_like_r2",
+      "rounds": 2,
+      "schedule": "swapbd"
+    },
+    {
+      "name": "dejmps_like_r3",
+      "rounds": 3,
+      "schedule": "swapbd"
+    }
+  ],
+  "ordered_methods": [
+    {
+      "name": "alternate_r1",
+      "rounds": 1,
+      "schedule": "alternate"
+    },
+    {
+      "name": "alternate_r2",
+      "rounds": 2,
+      "schedule": "alternate"
+    },
+    {
+      "name": "alternate_r3",
+      "rounds": 3,
+      "schedule": "alternate"
+    },
+    {
+      "name": "recurrence_r1",
+      "rounds": 1,
+      "schedule": "identity"
+    },
+    {
+      "name": "recurrence_r2",
+      "rounds": 2,
+      "schedule": "identity"
+    },
+    {
+      "name": "recurrence_r3",
+      "rounds": 3,
+      "schedule": "identity"
+    },
+    {
+      "name": "swapbc_r1",
+      "rounds": 1,
+      "schedule": "swapbc"
+    },
+    {
+      "name": "swapbc_r2",
+      "rounds": 2,
+      "schedule": "swapbc"
+    },
+    {
+      "name": "swapbc_r3",
+      "rounds": 3,
+      "schedule": "swapbc"
+    },
+    {
+      "name": "dejmps_like_r1",
+      "rounds": 1,
+      "schedule": "swapbd"
+    },
+    {
+      "name": "dejmps_like_r2",
+      "rounds": 2,
+      "schedule": "swapbd"
+    },
+    {
+      "name": "dejmps_like_r3",
+      "rounds": 3,
+      "schedule": "swapbd"
+    }
+  ]
+}
